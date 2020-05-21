@@ -1,0 +1,68 @@
+# NextCLoud with MariaDB/MySQL
+#
+# Access via "http://localhost:80" (or "http://$(docker-machine ip):80" if using docker-machine)
+#
+# During initial NextCLoud setup, select "Storage & database" --> "Configure the database" --> "MySQL/MariaDB"
+# Database user: nextcloud 
+# Database password: nextcloud
+# Database name: ncdb
+# Database host: replace "localhost" with "mariadb" the same name as the data base container name.
+#
+#
+# The reason for the more refined data persistence in the volumes is because if you were to
+# use just the the '/var/www/html' then everytime you would want/need to update/upgrade
+# NextCloud you would have to go into the volume on the host machine and delete 'version.php'
+#
+
+version: '3'
+services:
+
+  cloud:
+    container_name: nextcloud
+    restart: always
+    image: nextcloud
+    ports:
+      - 80:80
+    environment:
+      - NEXTCLOUD_ADMIN_USER=rhel
+      - NEXTCLOUD_ADMIN_PASSWORD=Fhsszxc1.
+      - MYSQL_DATABASE=ncdb
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=nextcloud
+      - MYSQL_HOST=mariadb
+      - NEXTCLOUD_TRUSTED_DOMAINS=127.0.0.1 192.168.86.3 192.168.86.2
+    volumes:
+      - /home/rhel/Server/CloudOffice/data/nextcloud:/var/www/html
+      - /home/rhel/Server/CloudOffice/data/nextcloud/apps:/var/www/html/apps
+      - /home/rhel/Server/CloudOffice/data/nextcloud/config:/var/www/html/config
+      - /home/rhel/Server/CloudOffice/data/nextcloud/data:/var/www/html/data
+    depends_on:
+      - mariadb
+
+  office:
+    container_name: office
+    restart: always
+    image: onlyoffice/documentserver
+    ports:
+      - 8080:80
+    volumes:
+      - /home/rhel/Server/CloudOffice/data/onlyoffice/DocumentServer/data:/var/www/onlyoffice/Data
+      - /home/rhel/Server/CloudOffice/data/onlyoffice/DocumentServer/logs:/var/log/onlyoffice
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ncdb
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=nextcloud
+    volumes:
+      - /home/rhel/Server/CloudOffice/data/mariadb:/var/lib/mysql
+
+networks:
+  default:
+    external:
+      name: nuc
