@@ -32,10 +32,10 @@ services:
       - MYSQL_HOST=mariadb
       - NEXTCLOUD_TRUSTED_DOMAINS=127.0.0.1 192.168.86.3 192.168.86.2
     volumes:
-      - /home/rhel/Server/CloudOffice/data/nextcloud:/var/www/html
-      - /home/rhel/Server/CloudOffice/data/nextcloud/apps:/var/www/html/apps
-      - /home/rhel/Server/CloudOffice/data/nextcloud/config:/var/www/html/config
-      - /home/rhel/Server/CloudOffice/data/nextcloud/data:/var/www/html/data
+      - ./data/nextcloud:/var/www/html
+      - ./data/nextcloud/apps:/var/www/html/apps
+      - ./data/nextcloud/config:/var/www/html/config
+      - ./data/nextcloud/data:/var/www/html/data
     depends_on:
       - mariadb
 
@@ -46,8 +46,8 @@ services:
     ports:
       - 8080:80
     volumes:
-      - /home/rhel/Server/CloudOffice/data/onlyoffice/DocumentServer/data:/var/www/onlyoffice/Data
-      - /home/rhel/Server/CloudOffice/data/onlyoffice/DocumentServer/logs:/var/log/onlyoffice
+      - ./data/onlyoffice/DocumentServer/data:/var/www/onlyoffice/Data
+      - ./data/onlyoffice/DocumentServer/logs:/var/log/onlyoffice
 
   mariadb:
     image: mariadb
@@ -60,7 +60,7 @@ services:
       - MYSQL_USER=nextcloud
       - MYSQL_PASSWORD=nextcloud
     volumes:
-      - /home/rhel/Server/CloudOffice/data/mariadb:/var/lib/mysql
+      - ./data/mariadb:/var/lib/mysql
 
 networks:
   default:
