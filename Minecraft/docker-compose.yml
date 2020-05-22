@@ -7,7 +7,16 @@ services:
       -  25565:25565
     environment:
       - EULA=true
+      - SEED=11864353719
       - DIFFICULTY=peaceful
+      - INIT_MEMORY=1G
+      - MAX_MEMORY=4G
+      - LEVEL_TYPE=LARGEBIOMES
+      - TZ=Australia/Melbourne
+      - MAX_WORLD_SIZE=100000
+      - FORCE_GAMEMODE=true
+      - MAX_BUILD_HEIGHT=512
+      - VIEW_DISTANCE=18
     stdin_open: true
     tty: true
     restart: always
